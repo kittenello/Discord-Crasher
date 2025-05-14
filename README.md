@@ -5,7 +5,7 @@
 **Многофункциональный Discord-утилит с консольным меню**  
 Удаление каналов, ролей, пользователей, флуд, спам, фановый функционал и многое другое.
 
-<img src="https://cdn-icons-png.flaticon.com/128/330/330437.png" height="28"/> Только на русском языке (English version — coming soon)
+<img src="https://cdn-icons-png.flaticon.com/128/330/330437.png" height="28"/> Скрипт только на русском языке, появление английского языка возможно скоро. The script is in Russian only, English language may appear soon.
 
 </div>
 
