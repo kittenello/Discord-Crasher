@@ -1064,7 +1064,7 @@ class Soft:
 
 
 soft = Soft(user_id, bot_id, TOKEN, bot)
-
+# kek
 async def main():
     bot_task = asyncio.create_task(bot.start(TOKEN))
     await bot.is_ready_event.wait()
