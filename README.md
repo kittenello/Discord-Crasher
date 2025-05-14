@@ -4,7 +4,6 @@
 
 Бесплатный многофункциональный дискорд-крашен для <img src="https://cdn-icons-png.flaticon.com/128/5968/5968756.png" height=15 /> Discord для Windows.
 
-Альтернатива https://github.com/bol-van/zapret-win-bundle
 </div>
 
 > [!IMPORTANT]
