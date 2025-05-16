@@ -3,9 +3,6 @@ import json
 import os
 import sys
 import requests
-import aiohttp
-import asyncio
-import webbrowser
 
 def run_setup():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -66,42 +63,7 @@ def run_setup():
     os.system("python main.py" if os.name == 'nt' else "python3 main.py")
     sys.exit()
 
-async def check_update():
-
-    if os.path.exists("version.txt"):
-        with open("version.txt", "r") as f:
-            local_version = f.read().strip()
-    else:
-        local_version = "0.0"
-
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get("https://raw.githubusercontent.com/kittenello/Discord-Crasher/refs/heads/main/version.txt") as resp:
-                if resp.status == 200:
-                    remote_version = (await resp.text()).strip()
-                else:
-                    Write.Print("\n>> Не удалось получить актуальную версию скрипта.", Colors.red_to_blue, interval=0)
-                    return
-    except Exception as e:
-        Write.Print(f"\n>> Ошибка при подключении к GitHub: {e}", Colors.red_to_blue, interval=0)
-        return
-
-    if local_version == remote_version:
-        Write.Print(f"\n>> У вас установлена актуальная версия {local_version}", Colors.green_to_yellow, interval=0)
-    else:
-        Write.Print(f"\n>> Ваша версия: {local_version}, доступна новая: {remote_version}", Colors.red_to_blue, interval=0)
-        answer = Write.Input("\n>> Хотите перейти на страницу скачки? [Y/N]: ", Colors.red_to_blue, interval=0)
-        if answer.lower() == 'y':
-            webbrowser.open("https://github.com/kittenello/Discord-Crasher/releases")
-        else:
-            confirm = Write.Input("\n>> Вы точно отказываетесь? Это может вызвать ошибки, подтвердите еще раз [Y/N]: ", Colors.red_to_white, interval=0)
-            if confirm.lower() == 'n':
-                Write.Print("\n>> Вы отказались от обновленния, возможно будут ошибки в скрипте.\n", Colors.red_to_white, interval=0)
-            else:
-                webbrowser.open("https://github.com/kittenello/Discord-Crasher/releases")
-
 if __name__ == "__main__":
-    asyncio.run(check_update())
     if not os.path.exists("configs/setup.json"):
         run_setup()
     else:

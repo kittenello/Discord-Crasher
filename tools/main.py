@@ -9,7 +9,6 @@ import requests
 import random
 import datetime
 import subprocess
-import webbrowser
 from tools.console_version import *
 import time
 
@@ -111,7 +110,7 @@ async def spam_channels(ctx, count: int = 0, *, text: str = ""):
                 count = random.randint(1, 100)
 
         if not text:
-            Write.Print("\n>> @everyone пишется автоматически в начале сообщения.", Colors.red_to_blue, interval=0)
+            Write.Print("\n>> @everyone пишется автоматически в начале сообщения.")
             text = Write.Input("\n>> Введите текст для спама: ", Colors.red_to_blue, interval=0)
 
         final_text = f"@everyone\n{text.strip()}" if text.strip() else crash_discord_ad
@@ -814,40 +813,6 @@ async def flood_pm(ctx, *, text: str = None):
     except Exception as e:
         Write.Print(f"\n>> Произошла ошибка: {e}", Colors.red_to_blue, interval=0)
 
-async def check_update(bot=None):
-
-    if os.path.exists("version.txt"):
-        with open("version.txt", "r") as f:
-            local_version = f.read().strip()
-    else:
-        local_version = "0.0"
-
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get("https://raw.githubusercontent.com/kittenello/Discord-Crasher/refs/heads/main/version.txt") as resp:
-                if resp.status == 200:
-                    remote_version = (await resp.text()).strip()
-                else:
-                    Write.Print("\n>> Не удалось получить актуальную версию скрипта.", Colors.red_to_blue, interval=0)
-                    return
-    except Exception as e:
-        Write.Print(f"\n>> Ошибка при подключении к GitHub: {e}", Colors.red_to_blue, interval=0)
-        return
-
-    if local_version == remote_version:
-        Write.Print(f"\n>> У вас установлена актуальная версия {local_version}", Colors.green_to_yellow, interval=0)
-    else:
-        Write.Print(f"\n>> Ваша версия: {local_version}, доступна новая: {remote_version}", Colors.red_to_blue, interval=0)
-        answer = Write.Input("\n>> Хотите перейти на страницу скачки? [Y/N]: ", Colors.red_to_blue, interval=0)
-        if answer.lower() == 'y':
-            webbrowser.open("https://github.com/kittenello/Discord-Crasher/releases")
-        else:
-            confirm = Write.Input("\n>> Вы точно отказываетесь? Это может вызвать ошибки, подтвердите еще раз [Y/N]: ", Colors.red_to_white, interval=0)
-            if confirm.lower() == 'n':
-                Write.Print("\n>> Вы отказались от обновленния, возможно будут ошибки в скрипте.\n", Colors.red_to_white, interval=0)
-            else:
-                webbrowser.open("https://github.com/kittenello/Discord-Crasher/releases")
-
 @bot.command(name='flood_mass_pm')
 async def flood_mass_pm(ctx, count: int = 0, *, text: str = None):
     try:
@@ -1085,8 +1050,6 @@ class Soft:
                 await dump_users(self.bot)
             elif command == 24:
                 await change_config(self.bot)
-            elif command == 25:
-                await check_update(self.bot)
             elif command == 666:
                 exit(0)
             elif command == 777:
@@ -1101,7 +1064,7 @@ class Soft:
 
 
 soft = Soft(user_id, bot_id, TOKEN, bot)
-# kek
+
 async def main():
     bot_task = asyncio.create_task(bot.start(TOKEN))
     await bot.is_ready_event.wait()
