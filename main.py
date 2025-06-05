@@ -87,12 +87,47 @@ async def rename_server(ctx, *, name: str = None):
     except Exception as e:
         Write.Print(f"\n>> Произошла ошибка: {e}", Colors.red_to_blue, interval=0)
 
+
+@bot.command(name='delete_templates')
+async def delete_templates(ctx):
+    try:
+        with open("configs/setup.json", 'r') as f:
+            setup = json.load(f)
+        
+        target_server_id = setup.get('SERVER', {}).get('id')
+        if not target_server_id:
+            Write.Print(f"\n>> SERVER_ID not found in configs/setup.json", Colors.red_to_blue, interval=0)
+            return
+        
+        guild = bot.get_guild(int(target_server_id))
+        if not guild:
+            Write.Print(f"\n>> Server with ID: {target_server_id} not found", Colors.red_to_blue, interval=0)
+            return
+        
+        templates = await guild.templates()
+        if not templates:
+            Write.Print(f"\n>> Не найдено шаблонов на сервере", Colors.red_to_blue, interval=0)
+            return
+        
+        for template in templates:
+            try:
+                await template.delete()
+                Write.Print(f"\n>> Шаблон {template.code} удален", Colors.green_to_yellow, interval=0)
+            except nextcord.Forbidden:
+                Write.Print(f"\n>> Отсутствуют права на удаление шаблона: {template.code}", Colors.red_to_blue, interval=0)
+            except nextcord.NotFound:
+                Write.Print(f"\n>> Шаблон {template.code} не найден", Colors.red_to_blue, interval=0)
+            except nextcord.HTTPException as e:
+                Write.Print(f"\n>> Ошибка удаления шаблона {template.code}: {e}", Colors.red_to_blue, interval=0)
+    
+    except Exception as e:
+        Write.Print(f"\n>> Ошибка: {e}", Colors.red_to_blue, interval=0)
+
 @bot.command(name='spam_channels')
 async def spam_channels(ctx, count: int = 0, *, text: str = ""):
     try:
         with open("configs/setup.json", 'r') as f:
             setup = json.load(f)
-
         target_server_id = setup.get('SERVER', {}).get('id')
         if not target_server_id:
             Write.Print(f"\n>> SERVER_ID not found in configs/setup.json", Colors.red_to_blue, interval=0)
@@ -210,7 +245,7 @@ async def delete_channels(ctx):
             await channel.delete()
     
     except Exception as e:
-        Write.Print(f"\n>> Error: {e}", Colors.red_to_blue, interval=0)
+        Write.Print(f"\n>> Ошибка {e}", Colors.red_to_blue, interval=0)
 
 @bot.command(name='flood_channels')
 @commands.has_permissions(manage_channels=True)
@@ -1077,15 +1112,17 @@ class Soft:
             elif command == 20:
                 await give_random_roles(self.bot)
             elif command == 21:
+                await delete_templates(self.bot)
+            elif command == 22:
                 user_id_input = int(Write.Input("\n>> Введите ID пользователя, которого хотите добавить в исключения: ", Colors.red_to_blue, interval=0))
                 await add_exception(user_id_input)
-            elif command == 22:
-                await change_activity(self.bot)
             elif command == 23:
-                await dump_users(self.bot)
+                await change_activity(self.bot)
             elif command == 24:
-                await change_config(self.bot)
+                await dump_users(self.bot)
             elif command == 25:
+                await change_config(self.bot)
+            elif command == 26:
                 await check_update(self.bot)
             elif command == 666:
                 exit(0)
